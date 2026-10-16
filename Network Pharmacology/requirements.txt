@@ -1,0 +1,11 @@
+beautifulsoup4>=4.12
+gprofiler-official>=1.0.0
+jinja2>=3.1
+markdown>=3.6
+networkx>=3.2
+openpyxl>=3.1
+pandas>=2.1
+pytest>=8.0
+PyYAML>=6.0
+requests>=2.31
+rdata>=0.11

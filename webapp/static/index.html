@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SushanAIDD-agent</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <div class="site-backdrop" aria-hidden="true">
+    <img src="/static/assets/sushan-hero-bg.png" alt="">
+    <div class="backdrop-vellum"></div>
+  </div>
+
+  <main class="app-shell">
+    <section id="authView" class="auth-layout">
+      <div class="brand-panel">
+        <div class="brand-kicker">
+          <span class="brand-mark">SA</span>
+          <span>SushanAIDD-agent</span>
+        </div>
+        <h1>SushanAIDD-agent</h1>
+        <p>网络药理学、分子对接与分子反向设计的一体化自动化平台。</p>
+        <div class="pipeline-preview" aria-label="workflow preview">
+          <div><span>01</span><strong>网络药理</strong><small>靶点、PPI、GO/KEGG/Reactome</small></div>
+          <div><span>02</span><strong>分子对接</strong><small>24 线程 Vina 与质量验证</small></div>
+          <div><span>03</span><strong>反向设计</strong><small>候选优化与结果说明书</small></div>
+        </div>
+      </div>
+
+      <form id="authForm" class="auth-card" method="post" action="/api/login" accept-charset="UTF-8">
+        <div class="form-head">
+          <h2>进入工作台</h2>
+          <p>每个账号同一时间只能提交一个未完成任务。</p>
+        </div>
+        <div class="tabs">
+          <button type="button" class="tab active" data-mode="login">登录</button>
+          <button type="button" class="tab" data-mode="register">注册</button>
+        </div>
+        <label>用户名<input name="username" autocomplete="username" required></label>
+        <label>密码<input name="password" type="password" autocomplete="current-password" required></label>
+        <label id="inviteField" class="hidden">注册码<input name="invite_code" autocomplete="off" placeholder="向管理员获取"></label>
+        <button class="primary" type="submit">进入 SushanAIDD-agent</button>
+        <p id="authMsg" class="message"></p>
+      </form>
+    </section>
+
+    <section id="dashboardView" class="dashboard hidden">
+      <header class="topbar">
+        <div>
+          <span class="eyebrow">Automated Platform for Network Pharmacology and Molecular Reverse Design</span>
+          <h1>SushanAIDD-agent</h1>
+          <p id="userLine"></p>
+        </div>
+        <div class="topbar-actions">
+          <span id="runningBadge" class="soft-badge">同步中</span>
+          <button id="logoutBtn" class="ghost" type="button">退出</button>
+        </div>
+      </header>
+
+      <section class="summary-strip" aria-label="task summary">
+        <article><span>运行中</span><strong id="runningCount">0</strong></article>
+        <article><span>排队中</span><strong id="queuedCount">0</strong></article>
+        <article><span>已完成</span><strong id="completedCount">0</strong></article>
+      </section>
+
+      <section class="work-grid">
+        <form id="taskForm" class="panel submit-panel">
+          <div class="panel-head">
+            <h2>提交科研任务</h2>
+            <span class="resource-pill">12 核 / 24 线程 / 不限内存</span>
+          </div>
+          <div class="field-grid">
+            <label>中药<input name="herbs" placeholder="例如：苦参" required></label>
+            <label>疾病<input name="disease" placeholder="例如：liver disease" required></label>
+            <label>pH<input name="ph" inputmode="decimal" placeholder="7.4"></label>
+          </div>
+          <label class="mode-field">任务模式
+            <select name="task_mode">
+              <option value="auto">自动识别 / 默认全流程</option>
+              <option value="network">仅网络药理学</option>
+              <option value="network+docking">网络药理学 + 分子对接</option>
+              <option value="full">全流程</option>
+            </select>
+          </label>
+          <div class="field-grid advanced-grid">
+            <label>额外蛋白/靶点名<input name="extra_targets" placeholder="PKL, EGFR, AKT1"></label>
+            <label>额外配体名<input name="extra_ligands" placeholder="aspirin, quercetin"></label>
+            <label>任务补充说明<textarea name="task_notes" rows="3" placeholder="不要反向设计；只跑网药；到对接为止"></textarea></label>
+          </div>
+          <p id="activeNotice" class="notice hidden"></p>
+          <p class="hint">默认不选特殊要求时跑全流程；想只跑网药、跑到对接为止、额外加入靶点或配体，可在这里选择或补充。疾病每次仅支持一个；中药可填单味或复方。结果包会包含根目录 `说明书.txt`，解释每个结果文件的用途。</p>
+          <button id="submitBtn" class="primary" type="submit">提交任务</button>
+          <p id="taskMsg" class="message"></p>
+        </form>
+
+        <section class="panel status-panel">
+          <div class="panel-head">
+            <h2>当前任务</h2>
+            <button id="refreshBtn" class="ghost" type="button">刷新</button>
+          </div>
+          <div id="currentTasks" class="task-list"></div>
+        </section>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <h2>历史与结果</h2>
+          <span id="taskCount" class="muted"></span>
+        </div>
+        <p class="history-disclaimer muted">
+          本网站按固定化工作流自动输出结果，使用固定数据库，细节方面把控有限，仅作为快速筛选一键自动化平台，若结果差强人意，敬请见谅!
+        </p>
+        <div id="historyTasks" class="task-table"></div>
+      </section>
+
+      <section class="panel log-panel">
+        <div class="panel-head">
+          <h2>日志摘要</h2>
+          <span id="selectedTask" class="muted"></span>
+        </div>
+        <pre id="logBox">选择一个任务查看日志摘要。</pre>
+      </section>
+
+    </section>
+  </main>
+  <script src="/static/app.js"></script>
+</body>
+</html>

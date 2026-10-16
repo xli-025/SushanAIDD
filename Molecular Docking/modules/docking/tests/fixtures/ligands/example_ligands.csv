@@ -1,0 +1,5 @@
+ligand_id,compound_name,pubchem_cid,canonical_smiles,isomeric_smiles,inchikey
+ethanol_smiles,Ethanol,,CCO,CCO,LFQSCWFLJHTTHZ-UHFFFAOYSA-N
+acetic_acid_pubchem,Acetic Acid,176,CC(=O)O,CC(=O)O,QTBSBXVTEAMEQO-UHFFFAOYSA-N
+benzene_smiles,Benzene,,C1=CC=CC=C1,C1=CC=CC=C1,UHOVQNZJYSORNB-UHFFFAOYSA-N
+

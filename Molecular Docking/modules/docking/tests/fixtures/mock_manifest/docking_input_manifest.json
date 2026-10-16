@@ -1,0 +1,23 @@
+{
+  "project_name": "mock_manifest_fixture",
+  "pairs": [
+    {
+      "pair_id": "SMOKE_TARGET__SMOKE_LIGAND",
+      "target_gene": "SMOKE_TARGET",
+      "ligand_id": "SMOKE_LIGAND",
+      "receptor_pdbqt": "../smoke_vina/receptor.pdbqt",
+      "ligand_pdbqt": "../smoke_vina/ligand.pdbqt",
+      "box_id": "fixture_box",
+      "box": {
+        "box_id": "fixture_box",
+        "center_x": 0,
+        "center_y": 0,
+        "center_z": 0,
+        "size_x": 20,
+        "size_y": 20,
+        "size_z": 20
+      }
+    }
+  ]
+}
+

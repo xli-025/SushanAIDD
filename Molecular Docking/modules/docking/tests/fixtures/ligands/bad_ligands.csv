@@ -1,0 +1,6 @@
+ligand_id,compound_name,pubchem_cid,canonical_smiles,isomeric_smiles,inchikey
+invalid_smiles,Bad SMILES,,C1CC,,BADINVALID
+missing_structure,Missing Structure,,,,MISSING
+multi_fragment,Multi Fragment,,CCO.CC,CCO.CC,MULTIFRAG
+unsupported_metal,Sodium Ion,,[Na+],[Na+],SODIUM
+

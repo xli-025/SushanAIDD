@@ -1,0 +1,91 @@
+schema_version: "npflow.network.v2"
+
+project:
+  name: "demo_huangqin_hcc"
+  organism: "Homo sapiens"
+  taxon_id: 9606
+
+input:
+  herb_name: "黄芩"
+  disease_name: "hepatocellular carcinoma"
+
+data_sources:
+  herb_compound_target: "TCMSP"
+  disease_target: "OpenTargets"
+  compound_structure: "PubChem"
+  ppi: "STRING"
+  enrichment: "gProfiler"
+
+source_weights:
+  # Ingredient-level confidence weights per data source.
+  # TCMSP OB/DL-active ingredients have highest confidence.
+  # SYMMAP and HerbiV lack OB/DL filtering; defaults are lower.
+  ingredient_confidence:
+    TCMSP_OBDL_ACTIVE: 1.00
+    HERBIV_NETWORK_INGREDIENT: 0.75
+    SYMMAP_LINKED_INGREDIENT: 0.65
+  # Compound-target relation confidence weights.
+  # TCMSP targets come from literature-validated databases.
+  # SYMMAP and HerbiV targets are computationally predicted.
+  compound_target_confidence:
+    TCMSP_COMPOUND_TARGET: 0.90
+    HERBIV_COMPOUND_TARGET: 0.65
+    SYMMAP_COMPOUND_TARGET: 0.60
+  # HerbiV-specific: combined_score thresholds for candidate eligibility.
+  herbiv:
+    min_score_for_candidate: 900
+    exploratory_min_score: 700
+    exploratory_max_score: 899
+
+compound_filter:
+  ob_min: 30
+  dl_min: 0.18
+  require_smiles: true
+  require_target: true
+
+ppi:
+  string_required_score: 0.7
+
+disease_mapping:
+  # Original compatibility: exact label/synonym first, then ranked search fallback.
+  # Non-exact selections are reported as unverified and require scientific review.
+  # For strict lookup, use require_exact_match: true and allow_nonexact_match: false.
+  require_exact_match: false
+  allow_nonexact_match: true
+  # Exact broad terms (for example, "inflammation") are allowed but remain warned.
+  allow_broad_term: true
+
+# Multi-factor weighted scoring for docking selection.
+# Replaces the old mean-rank method.
+ranking:
+  ligand_score_weights:
+    ingredient_confidence: 0.15
+    structure_quality: 0.20
+    target_link: 0.30
+    disease_relevance: 0.25
+    multi_source_support: 0.10
+  target_score_weights:
+    source_confidence: 0.25
+    disease_association: 0.25
+    ppi_topology: 0.20
+    compound_coverage: 0.20
+    multi_source_support: 0.10
+
+# Selection thresholds for docking candidates.
+selection:
+  contract_version: "docking_selection.v2"
+  docking_ligands:
+    top_n: 20
+    min_ligand_score: 0.55
+    min_ligand_confidence: 0.55
+    require_structure: true
+    require_linked_docking_target: true
+  docking_targets:
+    top_n: 20
+    min_target_score: 0.55
+    min_target_confidence: 0.55
+    require_disease_intersection: true
+    require_human_target: true
+
+output:
+  dir: "results/network_pharmacology"

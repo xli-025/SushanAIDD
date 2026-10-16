@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Reverse Design After Docking Config",
+  "type": "object",
+  "properties": {
+    "enabled": { "type": "boolean", "default": true },
+    "vina_score_cutoff": { "type": "number", "default": -6.0 },
+    "max_seed_pairs": { "type": "integer", "default": 3, "minimum": 1 },
+    "max_rounds": { "type": "integer", "default": 3, "minimum": 1, "maximum": 4 },
+    "hard_max_rounds": { "type": "integer", "default": 4, "minimum": 1, "maximum": 4 },
+    "raw_candidates_per_round_per_pair": { "type": "integer", "default": 30 },
+    "vina_candidates_per_round_per_pair": { "type": "integer", "default": 10 },
+    "max_vina_jobs_per_seed_pair": { "type": "integer", "default": 30 },
+    "max_total_vina_jobs": { "type": "integer", "default": 90 },
+    "improvement_margin_kcal": { "type": "number", "default": 1.0 },
+    "high_confidence_margin_kcal": { "type": "number", "default": 1.5 },
+    "backend": { "type": "string", "enum": ["dry_run", "deepfrag2"], "default": "dry_run" },
+    "redock_mode": { "type": "string", "enum": ["auto", "vina", "dry_run"], "default": "auto" }
+  },
+  "required": ["enabled"]
+}

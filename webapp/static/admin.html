@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SushanAIDD-agent Monitor</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body class="admin-body">
+  <div class="admin-backdrop" aria-hidden="true">
+    <img src="/static/assets/sushan-admin-bg.png" alt="">
+    <div class="admin-shade"></div>
+  </div>
+  <main class="admin-shell">
+    <header class="admin-topbar">
+      <div>
+        <span class="eyebrow">SushanAIDD-agent monitor</span>
+        <h1>运行监控台</h1>
+        <p id="adminLine">队列、资源、日志、下载和到期清理。</p>
+      </div>
+      <div class="admin-top-actions">
+        <button id="adminRefresh" class="admin-refresh hidden" type="button">刷新</button>
+        <button id="adminLogout" class="admin-refresh hidden" type="button">退出</button>
+      </div>
+    </header>
+    <section id="adminLoginPanel" class="panel admin-panel admin-login-panel">
+      <form id="adminLoginForm" class="admin-login-form" method="post" action="/api/admin/login" autocomplete="off">
+        <label for="adminToken">管理员令牌</label>
+        <input id="adminToken" name="token" type="password" required maxlength="512" autocomplete="current-password">
+        <button type="submit">登录监控台</button>
+        <p id="adminLoginMessage" class="message" role="status"></p>
+      </form>
+    </section>
+    <div id="adminDashboard" class="hidden">
+      <section id="metrics" class="metrics"></section>
+      <section class="panel admin-panel">
+        <div class="panel-head">
+          <h2>任务监控</h2>
+          <button id="cleanupBtn" class="ghost admin-ghost" type="button">清理过期</button>
+        </div>
+        <div id="adminTasks" class="task-table"></div>
+      </section>
+      <section class="panel log-panel admin-panel">
+        <div class="panel-head">
+          <h2>日志摘要</h2>
+          <span id="adminSelectedTask" class="muted"></span>
+        </div>
+        <pre id="adminLogBox">选择一个任务查看日志摘要。</pre>
+      </section>
+    </div>
+  </main>
+  <script src="/static/admin.js"></script>
+</body>
+</html>

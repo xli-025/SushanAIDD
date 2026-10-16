@@ -1,0 +1,5 @@
+target_gene,pdb_id,chain_id,input_structure_file,cleaned_receptor_pdb,prepared_receptor_pdbqt,removed_waters_count,removed_hetero_count,kept_cofactors,kept_metals,cocrystal_ligand_saved,cocrystal_ligand_file,missing_residue_count,missing_atom_count,missing_residue_ratio,protonation_method,preparation_tool,preparation_status,failure_reason,warning,confidence_level,meeko_attempted,meeko_success,meeko_command,meeko_stdout_log,meeko_stderr_log,fallback_attempted,fallback_tool,charge_zero_fraction,charge_sanity_status
+MISSING_LIG,3PTB,A,,,,0,0,,,True,modules/docking/tests/fixtures/binding_sites/missing_ligand.pdb,0,0,0.0,tool_default,openbabel_fallback,success,,openbabel_fallback_used,medium,True,False,,,,True,openbabel,,not_checked
+EMPTY_LIG,3PTB,A,,,,0,0,,,True,modules/docking/tests/fixtures/binding_sites/empty_ligand.pdb,0,0,0.0,tool_default,openbabel_fallback,success,,openbabel_fallback_used,medium,True,False,,,,True,openbabel,,not_checked
+NO_COORDS,3PTB,A,,,,0,0,,,True,modules/docking/tests/fixtures/binding_sites/no_coords_ligand.pdb,0,0,0.0,tool_default,openbabel_fallback,success,,openbabel_fallback_used,medium,True,False,,,,True,openbabel,,not_checked
+
