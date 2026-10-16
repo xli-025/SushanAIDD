@@ -1,0 +1,115 @@
+================================================================
+  NPFlow-Agent 使用手册 — Linux 服务器版
+  更新时间：2026-06-01
+  项目路径：/data/AIDD/
+================================================================
+
+一、启动交互聊天窗口
+----------------------------------------------------------------
+
+    python /data/AIDD/npflow_agent.py
+
+    输入自然语言即可开始，输入 quit 或按 Ctrl+C 退出。
+
+二、命令行模式（一次性）
+----------------------------------------------------------------
+
+    python /data/AIDD/npflow_agent.py "你的自然语言"
+
+三、聊天框交互示例
+----------------------------------------------------------------
+
+    💬 > 跑个苦参和肝病全流程
+    💬 > 金银花+流感 跑网药加对接
+    💬 > 板蓝根+炎症全流程，pH=6.3           ← pH 默认 7.4，可指定
+    💬 > 苦参+胃癌全流程，pH=2.0             ← 胃部靶点用低 pH
+    💬 > 只跑网药：甘草+炎症
+    💬 > 板蓝根感冒，对接加上PIK3CA和EGFR，配体加上aspirin
+
+    ★ 复方多味药（逗号/顿号分隔）：
+    💬 > 黄芪、当归、赤芍、川芎、桃仁、红花、地龙和VaD跑网药加对接
+
+    ★ 不跑反向设计：
+    💬 > 丹参+冠心病，不跑反向设计
+
+    ★ pH 自定义（默认 7.4）：
+    💬 > 苦参+胃癌全流程，pH=2.0
+
+    ★ 疾病缩写自动展开：
+    VaD→vascular dementia | AD→Alzheimer's | PD→Parkinson's
+    CAD→coronary artery disease | HCC→hepatocellular carcinoma
+    NAFLD→non-alcoholic fatty liver disease | UC→ulcerative colitis
+    RA→rheumatoid arthritis | T2DM→type 2 diabetes mellitus
+
+================================================================
+  三个模块结果文件路径
+================================================================
+
+一、网络药理学 (Network Pharmacology)
+----------------------------------------------------------------
+
+    <run_dir> = Network Pharmacology/results/network_pharmacology_runs/<项目名>_<疾病>_<时间戳>/
+
+    核心输出：
+      <run_dir>/07_core_targets/docking_targets.csv      → 对接靶点（含 target_score）
+      <run_dir>/07_core_targets/docking_ligands.csv      → 对接配体（含 ligand_score）
+      <run_dir>/08_report/qc_report.json                 → QC 报告
+      <run_dir>/08_report/network_pharmacology_report.md  → 网药 Markdown 报告
+      <run_dir>/08_report/network_pharmacology_report.html→ 网药 HTML 报告
+
+    latest run 路径：
+      Network Pharmacology/results/network_pharmacology_runs/latest_run.json
+
+二、分子对接 (Molecular Docking)
+----------------------------------------------------------------
+
+    <dock_dir> = <run_dir>/09_docking/
+
+    核心输出：
+      <dock_dir>/06_scores/docking_scores_ranked.csv     → 排序后分数（★ 看这个）
+      <dock_dir>/06_scores/docking_pair_qc.csv           → Pair 级 QC
+      <dock_dir>/08_docking_report/docking_report.html    → 对接 HTML 报告
+      <dock_dir>/validation/validation_summary.txt        → 验收摘要（★ 看这个）
+
+三、反向设计 (Reverse Design)
+----------------------------------------------------------------
+
+    <reverse_dir> = <dock_dir>/09_reverse_design_after_docking/
+
+    核心输出：
+      <reverse_dir>/natural_vs_optimized_comparison.csv   → 原始 vs 优化对比
+
+四、已验证案例
+----------------------------------------------------------------
+
+    苦参 + liver disease（三模块全链路，exit 0）：
+      - 网药：59 成分 / 177 交集靶点 / 29 配体
+      - 对接：5/5 PASS，靶点 PPARG
+      - 反向设计：3/3 accepted，最佳 +3.92 kcal/mol (Phaseolin → 优化)
+
+    板蓝根 + inflammation（pH=6.3 验证）：
+      - 网药：84 成分 / 397 交集靶点
+      - 对接：20/20 PASS，靶点 PTGS2 + PTGS1
+      - pH=6.3 在配体和受体 QC 中均正确记录
+
+================================================================
+  结果汇总（每次跑完自动生成）
+================================================================
+
+    每次跑完后，核心结果文件自动复制到 results/<药>_<疾病>/ 下：
+
+    results/<药名>_<疾病>/
+    ├── report.txt
+    ├── 01_network_pharmacology/    ← 网药全量
+    ├── 02_molecular_docking/       ← 对接全量
+    └── 03_reverse_design/          ← 反向设计全量
+
+================================================================
+  环境信息
+================================================================
+
+    Python:   python (3.11.7)
+    DeepFrag2: /data/ays/conda_envs/deepfrag2/ (Python 3.9.25)
+    Ollama:    本地 qwen3.5:latest (31.3B)
+    Vina:      /data/AIDD/.venv/bin/vina (1.2.5)
+    obabel:    /data/AIDD/.venv/bin/obabel (3.2.0)

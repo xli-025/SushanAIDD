@@ -1,0 +1,10 @@
+name: sushanaidd
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - pip
+  - openbabel
+  - vina=1.2.5
+  - pip:
+      - -r requirements.txt
